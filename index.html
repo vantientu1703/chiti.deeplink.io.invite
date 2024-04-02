@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Chiti...</title>
+        <script type="text/javascript">
+            var appStoreUrl = 'https://apps.apple.com/vn/app/chiti/id1522912419';
+            var playStoreUrl = 'https://play.google.com/store/apps/details?id=com.vantientu.RiceBooks&pcampaignid=web_share';
+            var facebookPage = 'https://www.facebook.com/profile.php?id=100066968462985'
+            
+            function openAppOrStore() {
+                var now = new Date().valueOf();
+                // Function to get URL parameters
+                function getQueryParam(param) {
+                    const params = new URLSearchParams(window.location.search);
+                    return params.get(param);
+                }
+                
+                // Assuming the URL is something like "?productName=Widget&price=19.99"
+                const link = getQueryParam('link');
+                
+                setTimeout(function () {
+                    if (new Date().valueOf() - now > 100) return;
+                    if (isiOS) {
+                        window.location.href = appStoreUrl
+                    } else if (isAndroid) {
+                        window.location.href = playStoreUrl
+                    } else {
+                        window.location.href = facebookPage
+                    }
+                }, 100);
+                
+                //window.location.href = link;
+                
+                // Insert these details into the page
+                document.getElementById('product-info').innerHTML = `
+                        <p>Link: ${link}</p>
+                    `;
+            }
+            
+            function isiOS() {
+                return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            }
+            
+            function isAndroid() {
+                return /android/i.test(navigator.userAgent) && !window.MSStream;
+            }
+            
+            // Call this function when the user clicks your link/button
+            // openAppOrStore();
+            // onload="openAppOrStore()"
+        </script>
+        
+    </head>
+    <body onload="openAppOrStore()">
+        <div id="product-info">
+            <!-- Product details will be inserted here -->
+        </div>
+    </body>
+</html>
