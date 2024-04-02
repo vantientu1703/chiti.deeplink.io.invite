@@ -8,44 +8,65 @@
         <link rel="icon" type="image/png" href="/images/logo.png">
 
         <script type="text/javascript">
-            var appStoreUrl = 'https://apps.apple.com/vn/app/chiti/id1522912419';
-            var playStoreUrl = 'https://play.google.com/store/apps/details?id=com.vantientu.RiceBooks&pcampaignid=web_share';
-            var facebookPage = 'https://www.facebook.com/profile.php?id=100066968462985'
-            
-            function openAppOrStore() {
-                var now = new Date().valueOf();
-                
-                setTimeout(function () {
-                    if (new Date().valueOf() - now > 100) return;
-                    if (isiOS) {
-                        window.location.href = appStoreUrl
-                    } else if (isAndroid) {
-                        window.location.href = playStoreUrl
-                    } else {
-                        window.location.href = facebookPage
-                    }
-                }, 50);
+            // var appStoreUrl = 'https://apps.apple.com/vn/app/chiti/id1522912419';
+            // var playStoreUrl = 'https://play.google.com/store/apps/details?id=com.vantientu.RiceBooks&pcampaignid=web_share';
+            // var facebookPage = 'https://www.facebook.com/profile.php?id=100066968462985'
+            var isBlurred = false;
+            var didFallback = false;
 
+            function openAppOrStore() {
+
+                var now = new Date().valueOf();
+
+                window.addEventListener('blur', function() {
+                    isBlurred = true;
+                });
+
+                window.addEventListener('focus', function() {
+                    isBlurred = false;
+                    // openAppOrStore();
+                });
+
+                // Assuming the URL is something like "?productName=Widget&price=19.99"
+                const link = getQueryParam('link');
+                var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+                if (link != null && link.length > 0) {
+                        window.location = `chiti://home/${link}`;
+                }  else {
+                    window.location = 'chiti://home'
+                }
+                
+                // var timeoutId = setTimeout(function () {
+                //     if (isBlurred || didFallback) return;
+                //     if (new Date().valueOf() - now > 100) return;
+                //     var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+                //     if (/android/i.test(userAgent)) {
+                //         window.location = playStoreUrl
+                //     } else {
+                //         window.location = appStoreUrl
+                //     }
+                //     didFallback = true;
+                // }, 500);
                 // Function to get URL parameters
                 function getQueryParam(param) {
                     const params = new URLSearchParams(window.location.search);
                     return params.get(param);
                 }
-                // Assuming the URL is something like "?productName=Widget&price=19.99"
-                const link = getQueryParam('link');
-                if (link != null && link.length > 0 && link.includes("chiti://")) {
-                    window.location = link;
-                }
-            }
-            
-            function isiOS() {
-                return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            }
-            
-            function isAndroid() {
-                return /android/i.test(navigator.userAgent) && !window.MSStream;
-            }
-            
+
+                document.addEventListener('visibilitychange', function() {
+                    if (document.visibilityState === "hidden") {
+                    // Assuming the app opened and the page is now hidden
+                        // clearTimeout(timeoutId);
+                        isBlurred = true;
+                    }
+                    if (document.visibilityState === "visible") {
+                        
+                    } else {
+                        // clearTimeout(timeoutId);
+                        isBlurred = true;
+                    }
+                });
+            }            
             // Call this function when the user clicks your link/button
             // openAppOrStore();
             // onload="openAppOrStore()"
@@ -54,5 +75,6 @@
     </head>
     <body onload="openAppOrStore()">
         Loading...
+        <div id="content"></div>
     </body>
 </html>
