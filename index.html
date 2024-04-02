@@ -14,11 +14,6 @@
             
             function openAppOrStore() {
                 var now = new Date().valueOf();
-                // Function to get URL parameters
-                function getQueryParam(param) {
-                    const params = new URLSearchParams(window.location.search);
-                    return params.get(param);
-                }
                 
                 setTimeout(function () {
                     if (new Date().valueOf() - now > 100) return;
@@ -29,16 +24,18 @@
                     } else {
                         window.location.href = facebookPage
                     }
-                }, 100);
+                }, 50);
 
+                // Function to get URL parameters
+                function getQueryParam(param) {
+                    const params = new URLSearchParams(window.location.search);
+                    return params.get(param);
+                }
                 // Assuming the URL is something like "?productName=Widget&price=19.99"
                 const link = getQueryParam('link');
-                window.location.href = link;
-                
-                // Insert these details into the page
-                // document.getElementById('product-info').innerHTML = `
-                //         <p>Link: ${link}</p>
-                //     `;
+                if (link != null && link.length > 0 && link.includes("chiti://")) {
+                    window.location = link;
+                }
             }
             
             function isiOS() {
@@ -57,8 +54,5 @@
     </head>
     <body onload="openAppOrStore()">
         Loading...
-        <div id="product-info">
-            <!-- Product details will be inserted here -->
-        </div>
     </body>
 </html>
